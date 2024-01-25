@@ -1,5 +1,5 @@
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
+
+import { Colocviu } from './components/Colocviu'
 import { Home } from "./components/Home";
 
 const AppRoutes = [
@@ -8,12 +8,10 @@ const AppRoutes = [
     element: <Home />
   },
   {
-    path: '/counter',
-    element: <Counter />
+    path: '/colocviu',
+    element: <Colocviu />
   },
   {
-    path: '/fetch-data',
-    element: <FetchData />
   }
 ];
 

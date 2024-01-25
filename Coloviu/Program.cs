@@ -1,33 +1,35 @@
-using Newtonsoft.Json.Serialization; 
+﻿using Newtonsoft.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Coloviu.Data; // Presupunând că `ColocviuDbContext` este în acest namespace
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllersWithViews();
 
-//JSON SERIALIZER 
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddNewtonsoftJson(
-    options=>options.SerializerSettings.ContractResolver=new DefaultContractResolver());
+// Configure DbContext with SQL Server
+builder.Services.AddDbContext<ColocviuDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("colocviuDBCon")));
 
+// JSON Serializer 
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 var app = builder.Build();
 
-//Enable CORS
+// Enable CORS
 app.UseCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
 
 app.MapControllerRoute(
     name: "default",
